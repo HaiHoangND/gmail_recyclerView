@@ -6,4 +6,6 @@ data class EmailModel(
     val avatar: String,
     val time: String,
     var selected: Boolean
-)
+){
+    var showSecondary: Boolean = false
+}

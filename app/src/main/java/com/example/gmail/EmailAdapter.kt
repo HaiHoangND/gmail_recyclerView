@@ -16,8 +16,8 @@ import androidx.constraintlayout.widget.ConstraintSet
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.coroutines.NonDisposableHandle.parent
 
-class EmailAdapter(val messages: ArrayList<EmailModel>) : RecyclerView.Adapter<EmailAdapter.EmailItemViewHolder>() {
-
+class EmailAdapter(val messages: ArrayList<EmailModel>) :
+    RecyclerView.Adapter<EmailAdapter.EmailItemViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): EmailItemViewHolder {
         val itemView = LayoutInflater.from(parent.context)
             .inflate(R.layout.layout_item, parent, false)
@@ -50,6 +50,19 @@ class EmailAdapter(val messages: ArrayList<EmailModel>) : RecyclerView.Adapter<E
                 holder.selected.setImageResource(R.drawable.star)
             }
         }
+        holder.mainItem.setOnLongClickListener {
+            email.showSecondary = !email.showSecondary
+            holder.secondaryItem.visibility = View.VISIBLE
+            holder.mainItem.visibility = View.INVISIBLE
+            true
+        }
+
+        // Xử lý sự kiện khi người dùng nhấn nút cancel trong secondaryItem
+        holder.cancelButton.setOnClickListener {
+            email.showSecondary = false
+            holder.mainItem.visibility = View.VISIBLE
+            holder.secondaryItem.visibility = View.INVISIBLE
+        }
     }
 
     class EmailItemViewHolder(val itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -58,6 +71,9 @@ class EmailAdapter(val messages: ArrayList<EmailModel>) : RecyclerView.Adapter<E
         val message: TextView
         val time: TextView
         val selected: ImageView
+        val mainItem: ConstraintLayout = itemView.findViewById(R.id.mainItem)
+        val secondaryItem: ConstraintLayout = itemView.findViewById(R.id.secondaryItem)
+        val cancelButton: ImageView = itemView.findViewById(R.id.cancel)
 
         init {
             avatar = itemView.findViewById(R.id.avatar)
